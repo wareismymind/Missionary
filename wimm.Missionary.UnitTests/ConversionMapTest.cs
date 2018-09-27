@@ -4,12 +4,12 @@ using Xunit;
 
 namespace wimm.Missionary.UnitTests
 {
-    public class MapOfTypeToConversionToKeyFromTest
+    public class ConversionMapTest
     {
         [Fact]
         public void Get_MapDoesNotContainConversion_ReturnsNull()
         {
-            var underTest = new MapOfTypeToConversionToKeyFrom<int>();
+            var underTest = new ConversionMap<int>();
 
             var actual = underTest.Get<string>();
 
@@ -19,7 +19,7 @@ namespace wimm.Missionary.UnitTests
         [Fact]
         public void Set_NullConversion_Throws()
         {
-            var underTest = new MapOfTypeToConversionToKeyFrom<int>();
+            var underTest = new ConversionMap<int>();
 
             var ex = Assert.Throws<ArgumentNullException>(() => underTest.Set<string>(null));
 
@@ -30,7 +30,7 @@ namespace wimm.Missionary.UnitTests
         public void Set_MapDoesNotContainConversion_Returns()
         {
             var conversion = new Mock<IConversion<int, string>>();
-            var underTest = new MapOfTypeToConversionToKeyFrom<int>();
+            var underTest = new ConversionMap<int>();
 
             underTest.Set(conversion.Object);
         }
@@ -39,7 +39,7 @@ namespace wimm.Missionary.UnitTests
         public void Get_MapContainsConversion_ReturnsConversion()
         {
             var expected = new Mock<IConversion<int, string>>().Object;
-            var underTest = new MapOfTypeToConversionToKeyFrom<int>();
+            var underTest = new ConversionMap<int>();
             underTest.Set(expected);
 
             var actual = underTest.Get<string>();
@@ -51,7 +51,7 @@ namespace wimm.Missionary.UnitTests
         public void Set_MapContainsConversion_Returns()
         {
             var expected = new Mock<IConversion<int, string>>().Object;
-            var underTest = new MapOfTypeToConversionToKeyFrom<int>();
+            var underTest = new ConversionMap<int>();
             underTest.Set(expected);
 
             var actual = underTest.Get<string>();
@@ -63,7 +63,7 @@ namespace wimm.Missionary.UnitTests
         public void Set_ConversionForTypeWasReAdded_ReturnsLastAdded()
         {
             var expected = new Mock<IConversion<int, string>>().Object;
-            var underTest = new MapOfTypeToConversionToKeyFrom<int>();
+            var underTest = new ConversionMap<int>();
             underTest.Set(new Mock<IConversion<int, string>>().Object);
             underTest.Set(expected);
 

@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Moq;
 using Xunit;
 
 namespace wimm.Missionary.UnitTests
 {
-    public class PoorlyNamedConversionMapUserTest
+    public class MapConverterTest
     {
         [Fact]
         public void Construct_NullMap_Throws()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => new PoorlyNamedConversionMapUser<int>(null));
+            var ex = Assert.Throws<ArgumentNullException>(() => new MapConverter<int>(null));
 
             Assert.Equal("map", ex.ParamName);
         }
@@ -19,16 +17,16 @@ namespace wimm.Missionary.UnitTests
         [Fact]
         public void Construct_ValidArgs_Constructs()
         {
-            var map = new Mock<IMapOfTypeToConversionToKeyFrom<int>>().Object;
+            var map = new Mock<IConversionMap<int>>().Object;
 
-            var _ = new PoorlyNamedConversionMapUser<int>(map);
+            var _ = new MapConverter<int>(map);
         }
 
         [Fact]
         public void To_MapDoesNotContainType_Throws()
         {
-            var map = new Mock<IMapOfTypeToConversionToKeyFrom<int>>().Object;
-            var underTest = new PoorlyNamedConversionMapUser<int>(map);
+            var map = new Mock<IConversionMap<int>>().Object;
+            var underTest = new MapConverter<int>(map);
 
             var ex = Assert.Throws<InvalidOperationException>(() => underTest.To<string>(42));
         }
@@ -39,9 +37,9 @@ namespace wimm.Missionary.UnitTests
             var expected = new Exception();
             var conversion = new Mock<IConversion<int, string>>();
             conversion.Setup(c => c.Convert(It.IsAny<int>())).Throws(expected);
-            var map = new Mock<IMapOfTypeToConversionToKeyFrom<int>>();
+            var map = new Mock<IConversionMap<int>>();
             map.Setup(m => m.Get<string>()).Returns(conversion.Object);
-            var underTest = new PoorlyNamedConversionMapUser<int>(map.Object);
+            var underTest = new MapConverter<int>(map.Object);
 
             var ex = Assert.Throws<InvalidCastException>(() => underTest.To<string>(42));
             var actual = ex.InnerException;
@@ -55,9 +53,9 @@ namespace wimm.Missionary.UnitTests
             var expected = "expected return value";
             var conversion = new Mock<IConversion<int, string>>();
             conversion.Setup(c => c.Convert(It.IsAny<int>())).Returns(expected);
-            var map = new Mock<IMapOfTypeToConversionToKeyFrom<int>>();
+            var map = new Mock<IConversionMap<int>>();
             map.Setup(m => m.Get<string>()).Returns(conversion.Object);
-            var underTest = new PoorlyNamedConversionMapUser<int>(map.Object);
+            var underTest = new MapConverter<int>(map.Object);
 
             var actual = underTest.To<string>(42);
 

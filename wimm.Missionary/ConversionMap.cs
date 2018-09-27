@@ -4,10 +4,8 @@ using System.Collections.Generic;
 namespace wimm.Missionary
 {
     /// <inheritDoc />
-    public class MapOfTypeToConversionToKeyFrom<T> : IMapOfTypeToConversionToKeyFrom<T>
+    public class ConversionMap<T> : IConversionMap<T>
     {
-        // TODO:TS Name this better
-
         private readonly IDictionary<Type, object> _conversions = new Dictionary<Type, object>();
 
         public void Set<U>(IConversion<T, U> conversion) =>

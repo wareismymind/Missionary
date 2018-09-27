@@ -3,20 +3,18 @@
 namespace wimm.Missionary
 {
     /// <summary>
-    /// An implementation of <see cref="IPerformConversionsFromTheSameTypeToDifferentTypes{T}"/>
-    /// that uses an <see cref="IMapOfTypeToConversionToKeyFrom{T}"/> to implement its conversions.
+    /// An implementation of <see cref="IConverter{T}"/> that uses an
+    /// <see cref="IConversionMap{T}"/> to implement its conversions.
     /// </summary>
-    public class PoorlyNamedConversionMapUser<T> : IPerformConversionsFromTheSameTypeToDifferentTypes<T>
+    public class MapConverter<T> : IConverter<T>
     {
-        // TODO:TS Name this better
-
-        private readonly IMapOfTypeToConversionToKeyFrom<T> _map;
+        private readonly IConversionMap<T> _map;
 
         /// <summary>
-        /// Initializes a new <see cref="PoorlyNamedConversionMapUser{T}"/>.
+        /// Initializes a new <see cref="MapConverter{T}"/>.
         /// </summary>
         /// <param name="map">The map to use for conversions.</param>
-        public PoorlyNamedConversionMapUser(IMapOfTypeToConversionToKeyFrom<T> map)
+        public MapConverter(IConversionMap<T> map)
         {
             _map = map ?? throw new ArgumentNullException(nameof(map));
         }

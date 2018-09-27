@@ -6,12 +6,10 @@ namespace wimm.Missionary
     /// Performs type conversions from <typeparamref name="T"/> to dynamically specified types.
     /// </summary>
     /// <typeparam name="T">The convert-from type.</typeparam>
-    public interface IPerformConversionsFromTheSameTypeToDifferentTypes<T>
+    public interface IConverter<T>
     {
-        // TODO:TS Name this better
-
         /// <summary>
-        /// Converts values of type <typeparamref name="T"/> to <typeparamref name="U"/>.
+        /// Converts a value of type <typeparamref name="T"/> to <typeparamref name="U"/>.
         /// </summary>
         /// <typeparam name="U">The convert-to type.</typeparam>
         /// <param name="from">The value to convert.</param>
