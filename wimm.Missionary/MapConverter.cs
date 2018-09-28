@@ -24,6 +24,8 @@ namespace wimm.Missionary
             var conversion = _map.Get<U>() ??
                 throw new InvalidOperationException($"Conversion to {nameof(U)} not found.");
 
+            if (from == null) throw new ArgumentNullException(nameof(from));
+
             try
             {
                 return conversion.Convert(from);

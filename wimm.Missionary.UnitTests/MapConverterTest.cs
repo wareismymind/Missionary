@@ -32,6 +32,19 @@ namespace wimm.Missionary.UnitTests
         }
 
         [Fact]
+        public void To_NullFrom_Throws()
+        {
+            var conversion = new Mock<IConversion<string, int>>().Object;
+            var map = new Mock<IConversionMap<string>>();
+            map.Setup(m => m.Get<int>()).Returns(conversion);
+            var underTest = new MapConverter<string>(map.Object);
+
+            var ex = Assert.Throws<ArgumentNullException>(() => underTest.To<int>(null));
+
+            Assert.Equal("from", ex.ParamName);
+        }
+
+        [Fact]
         public void To_ConversionThrows_ExceptionIsWrapped()
         {
             var expected = new Exception();
