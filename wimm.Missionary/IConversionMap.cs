@@ -21,8 +21,6 @@ namespace wimm.Missionary
         /// </returns>
         IConversion<T, U> Get<U>();
 
-        // TODO: Consider throwing if the same typed conversion is set more than once.
-
         /// <summary>
         /// Sets the conversion from <typeparamref name="T"/> to <typeparamref name="U"/>.
         /// </summary>
