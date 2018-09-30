@@ -8,8 +8,13 @@ namespace wimm.Missionary
     {
         private readonly IDictionary<Type, object> _conversions = new Dictionary<Type, object>();
 
-        public void Set<U>(IConversion<T, U> conversion) =>
-            _conversions[typeof(U)] = (conversion ?? throw new ArgumentNullException(nameof(conversion)));
+        public void Set<U>(IConversion<T, U> conversion)
+        {
+            if (conversion == null) throw new ArgumentNullException(nameof(conversion));
+            if (Get<U>() != null)
+                throw new ArgumentException($"Conversion to {nameof(U)} already set.", nameof(conversion));
+            _conversions[typeof(U)] = conversion;
+        }
 
         public IConversion<T, U> Get<U>() =>
             _conversions.TryGetValue(typeof(U), out var conversion)

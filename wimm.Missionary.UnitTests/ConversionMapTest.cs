@@ -48,28 +48,17 @@ namespace wimm.Missionary.UnitTests
         }
 
         [Fact]
-        public void Set_MapContainsConversion_Returns()
+        public void Set_MapContainsConversion_Throws()
         {
-            var expected = new Mock<IConversion<int, string>>().Object;
-            var underTest = new ConversionMap<int>();
-            underTest.Set(expected);
-
-            var actual = underTest.Get<string>();
-
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
-        public void Set_ConversionForTypeWasReAdded_ReturnsLastAdded()
-        {
-            var expected = new Mock<IConversion<int, string>>().Object;
             var underTest = new ConversionMap<int>();
             underTest.Set(new Mock<IConversion<int, string>>().Object);
-            underTest.Set(expected);
 
-            var actual = underTest.Get<string>();
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                underTest.Set(new Mock<IConversion<int, string>>().Object);
+            });
 
-            Assert.Equal(expected, actual);
+            Assert.Equal("conversion", ex.ParamName);
         }
     }
 }
