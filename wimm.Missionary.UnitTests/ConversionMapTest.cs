@@ -1,5 +1,6 @@
 ﻿using System;
 using Moq;
+using wimm.Secundatives;
 using Xunit;
 
 namespace wimm.Missionary.UnitTests
@@ -7,13 +8,13 @@ namespace wimm.Missionary.UnitTests
     public class ConversionMapTest
     {
         [Fact]
-        public void Get_MapDoesNotContainConversion_ReturnsNull()
+        public void Get_MapDoesNotContainConversion_ReturnsNone()
         {
             var underTest = new ConversionMap<int>();
 
             var actual = underTest.Get<string>();
 
-            Assert.Null(actual);
+            Assert.Equal(Maybe<IConversion<int, string>>.None, actual);
         }
 
         [Fact]
@@ -42,7 +43,7 @@ namespace wimm.Missionary.UnitTests
             var underTest = new ConversionMap<int>();
             underTest.Set(expected);
 
-            var actual = underTest.Get<string>();
+            var actual = underTest.Get<string>().Value;
 
             Assert.Equal(expected, actual);
         }

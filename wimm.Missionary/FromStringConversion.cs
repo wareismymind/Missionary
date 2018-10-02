@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using wimm.Secundatives;
 
 namespace wimm.Missionary
 {
@@ -22,7 +23,7 @@ namespace wimm.Missionary
         /// </returns>
         public static bool Supported()
         {
-            return GetConversion() != null;
+            return GetConversion() != Maybe<Func<string, T>>.None;
         }
 
         /// <summary>
@@ -35,26 +36,30 @@ namespace wimm.Missionary
         /// </exception>
         public FromStringConversion()
         {
-            _conversion = new DelegateConversion<string, T>(GetConversion() ??
-                throw new NotSupportedException($"{nameof(T)} does not support automatic conversion from string."));
+            var conversion = GetConversion();
+
+            if (conversion == Maybe<Func<string, T>>.None)
+                throw new NotSupportedException($"{nameof(T)} does not support automatic conversion from string.");
+
+            _conversion = new DelegateConversion<string, T>(conversion.Value);
         }
 
         public T Convert(string from) => _conversion.Convert(from);
 
-        private static Func<string, T> GetConversion()
+        private static Maybe<Func<string, T>> GetConversion()
         {
             var constructor = typeof(T).GetConstructor(new[] { typeof(string) });
             if (constructor != null)
-                return str => (T)constructor.Invoke(new[] { str });
+                return new Maybe<Func<string, T>>(str => (T)constructor.Invoke(new[] { str }));
 
             var name = "Parse";
             var bindingFlags = BindingFlags.Static | BindingFlags.Public;
             var types = new[] { typeof(string) };
             var parseMethod = typeof(T).GetMethod(name, bindingFlags, null, types, null);
             if (parseMethod != null && parseMethod.ReturnType == typeof(T))
-                return str => (T)parseMethod.Invoke(null, new[] { str });
+                return new Maybe<Func<string, T>>(str => (T)parseMethod.Invoke(null, new[] { str }));
 
-            return null;
+            return new Maybe<Func<string, T>>();
         }
     }
 }

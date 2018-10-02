@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using wimm.Secundatives;
 
 namespace wimm.Missionary
 {
@@ -11,14 +12,14 @@ namespace wimm.Missionary
         public void Set<U>(IConversion<T, U> conversion)
         {
             if (conversion == null) throw new ArgumentNullException(nameof(conversion));
-            if (Get<U>() != null)
+            if (Get<U>() != Maybe<IConversion<T, U>>.None)
                 throw new ArgumentException($"Conversion to {nameof(U)} already set.", nameof(conversion));
             _conversions[typeof(U)] = conversion;
         }
 
-        public IConversion<T, U> Get<U>() =>
+        public Maybe<IConversion<T, U>> Get<U>() =>
             _conversions.TryGetValue(typeof(U), out var conversion)
-                ? (IConversion<T, U>)conversion
-                : null;
+                ? new Maybe<IConversion<T, U>>((IConversion<T, U>)conversion)
+                : new Maybe<IConversion<T, U>>();
     }
 }
