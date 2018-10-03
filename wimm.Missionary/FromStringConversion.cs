@@ -21,10 +21,7 @@ namespace wimm.Missionary
         /// <returns>
         /// <c>true</c> is <typeparamref name="T"/> is supported, otherwise <c>false</c>.
         /// </returns>
-        public static bool Supported()
-        {
-            return GetConversion() != Maybe<Func<string, T>>.None;
-        }
+        public static bool Supported() => GetConversion().Exists;
 
         /// <summary>
         /// Initializes a new new <see cref="FromStringConversion{T}"/>.
@@ -38,7 +35,7 @@ namespace wimm.Missionary
         {
             var conversion = GetConversion();
 
-            if (conversion == Maybe<Func<string, T>>.None)
+            if (!conversion.Exists)
                 throw new NotSupportedException($"{nameof(T)} does not support automatic conversion from string.");
 
             _conversion = new DelegateConversion<string, T>(conversion.Value);

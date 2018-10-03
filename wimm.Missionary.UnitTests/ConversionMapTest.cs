@@ -12,9 +12,7 @@ namespace wimm.Missionary.UnitTests
         {
             var underTest = new ConversionMap<int>();
 
-            var actual = underTest.Get<string>();
-
-            Assert.Equal(Maybe<IConversion<int, string>>.None, actual);
+            Assert.False(underTest.Get<string>().Exists);
         }
 
         [Fact]

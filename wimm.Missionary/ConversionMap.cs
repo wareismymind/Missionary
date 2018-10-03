@@ -12,7 +12,7 @@ namespace wimm.Missionary
         public void Set<U>(IConversion<T, U> conversion)
         {
             if (conversion == null) throw new ArgumentNullException(nameof(conversion));
-            if (Get<U>() != Maybe<IConversion<T, U>>.None)
+            if (Get<U>().Exists)
                 throw new ArgumentException($"Conversion to {nameof(U)} already set.", nameof(conversion));
             _conversions[typeof(U)] = conversion;
         }
