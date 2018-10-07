@@ -14,4 +14,8 @@
     <WarningsAsErrors />
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="wimm.Secundatives" Version="1.1.0" />
+  </ItemGroup>
+
 </Project>

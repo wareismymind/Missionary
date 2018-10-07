@@ -1,5 +1,6 @@
 ﻿using System;
 using Moq;
+using wimm.Secundatives;
 using Xunit;
 
 namespace wimm.Missionary.UnitTests
@@ -32,13 +33,26 @@ namespace wimm.Missionary.UnitTests
         }
 
         [Fact]
+        public void To_NullFrom_Throws()
+        {
+            var conversion = new Mock<IConversion<string, int>>().Object;
+            var map = new Mock<IConversionMap<string>>();
+            map.Setup(m => m.Get<int>()).Returns(new Maybe<IConversion<string, int>>(conversion));
+            var underTest = new MapConverter<string>(map.Object);
+
+            var ex = Assert.Throws<ArgumentNullException>(() => underTest.To<int>(null));
+
+            Assert.Equal("from", ex.ParamName);
+        }
+
+        [Fact]
         public void To_ConversionThrows_ExceptionIsWrapped()
         {
             var expected = new Exception();
             var conversion = new Mock<IConversion<int, string>>();
             conversion.Setup(c => c.Convert(It.IsAny<int>())).Throws(expected);
             var map = new Mock<IConversionMap<int>>();
-            map.Setup(m => m.Get<string>()).Returns(conversion.Object);
+            map.Setup(m => m.Get<string>()).Returns(new Maybe<IConversion<int, string>>(conversion.Object));
             var underTest = new MapConverter<int>(map.Object);
 
             var ex = Assert.Throws<InvalidCastException>(() => underTest.To<string>(42));
@@ -54,7 +68,7 @@ namespace wimm.Missionary.UnitTests
             var conversion = new Mock<IConversion<int, string>>();
             conversion.Setup(c => c.Convert(It.IsAny<int>())).Returns(expected);
             var map = new Mock<IConversionMap<int>>();
-            map.Setup(m => m.Get<string>()).Returns(conversion.Object);
+            map.Setup(m => m.Get<string>()).Returns(new Maybe<IConversion<int, string>>(conversion.Object));
             var underTest = new MapConverter<int>(map.Object);
 
             var actual = underTest.To<string>(42);

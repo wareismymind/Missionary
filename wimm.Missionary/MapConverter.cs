@@ -1,4 +1,5 @@
 ﻿using System;
+using wimm.Secundatives;
 
 namespace wimm.Missionary
 {
@@ -21,12 +22,16 @@ namespace wimm.Missionary
 
         public U To<U>(T from)
         {
-            var conversion = _map.Get<U>() ??
+            var conversion = _map.Get<U>();
+
+            if (!conversion.Exists)
                 throw new InvalidOperationException($"Conversion to {nameof(U)} not found.");
+
+            if (from == null) throw new ArgumentNullException(nameof(from));
 
             try
             {
-                return conversion.Convert(from);
+                return conversion.Value.Convert(from);
             }
             catch (Exception ex)
             {
